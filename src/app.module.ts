@@ -18,11 +18,11 @@ import { env } from 'env/env';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: "mysql.railway.internal",
-      port: 3006,
-      username: 'root',
-      password: "DIXyTKsVdTwzwtoTUWNJnWgajsilXLbY",
-      database: "railway",
+      host: process.env.MYSQLHOST ?? 'localhost',
+      port: parseInt(`${process.env.MYSQLPORT}`) ?? 3006,
+      username: process.env.MYSQLUSER ?? 'root',
+      password: process.env.MYSQLPASSWORD ?? 'PepeApp12@',
+      database: process.env.MYSQLDATABASE ?? 'test-nestjs',
       autoLoadEntities: true,
       synchronize: true,
     }),
