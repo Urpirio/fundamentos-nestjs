@@ -1,28 +1,47 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProductosService } from './productos.service';
-import { Productos } from './productos.entity';
+import { CreateProductoDto } from './dto/create-producto.dto';
+import { UpdateProductoDto } from './dto/update-producto.dto';
 
+// Que son los controladores
+// Los los controladores son los cuales direccionan los elemntos es decir, estos se encargan de en base a la path base que se tenga filtra elem
 @Controller('productos')
 export class ProductosController {
-  constructor(private ProductosService: ProductosService) {
-    ProductosService.FindAll();
+  constructor(private readonly productosService: ProductosService) {}
+
+  @Post()
+  create(@Body() createProductoDto: CreateProductoDto) {
+    return this.productosService.create(createProductoDto);
   }
+
   @Get()
-  FindAll() {
-    return this.ProductosService.FindAll();
+  findAll() {
+    return this.productosService.findAll();
   }
+
   @Get(':id')
-  FindOne(@Param('id') id: string) {
-    return this.ProductosService.FindOne(id);
+  findOne(@Param('id') id: string) {
+    return this.productosService.findOne(+id);
   }
 
   @Patch(':id')
-  Update(@Param('id') id: string, @Body() updatebody: Productos) {
-    return this.ProductosService.Update(id, updatebody);
+  update(
+    @Param('id') id: string,
+    @Body() updateProductoDto: UpdateProductoDto,
+  ) {
+    return this.productosService.update(+id, updateProductoDto);
   }
 
-  @Post()
-  Create(@Body() Create: Productos) {
-    return this.ProductosService.Create(Create);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.productosService.remove(+id);
   }
 }

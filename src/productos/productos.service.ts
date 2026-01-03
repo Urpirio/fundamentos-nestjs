@@ -1,35 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { Productos } from './productos.entity';
-import Data_Productos from '../../Data/Data-Productos.json';
+import { CreateProductoDto } from './dto/create-producto.dto';
+import { UpdateProductoDto } from './dto/update-producto.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Producto } from './entities/producto.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductosService {
-  FindAll(): Productos[] {
-    return Data_Productos;
+  constructor(
+    @InjectRepository(Producto)
+    private ProductosRepository: Repository<Producto>,
+  ) {}
+  async create(createProductoDto: CreateProductoDto) {
+    const producto = this.ProductosRepository.create(createProductoDto);
+    return await this.ProductosRepository.save(producto);
   }
 
-  FindOne(id: string): Productos[] {
-    const One = Data_Productos.filter((element) => {
-      if (id == element.id) {
-        return element;
-      }
-    });
-    return One;
+  // Esto nos permite encontrar todos los elementos de manera rapida
+  async findAll() {
+    return await this.ProductosRepository.find();
   }
 
-  Update(id: string, updatebody: Productos): Productos[] {
-    Data_Productos.forEach((data, index) => {
-      if (data.id == id) {
-        Object.keys(updatebody).forEach((element) => {
-          Data_Productos[index][element] = updatebody[element];
-        });
-      }
-    });
-    return Data_Productos;
+  async findOne(id: number) {
+
+    const producto = await this.ProductosRepository.findOneBy({ id });
+
+    // Podemos ponernos creativos con condicionales y asi mismo un monton de cosas mas
+    if (!producto) {
+      return {
+        status: 404,
+      };
+    }
+    return producto;
   }
 
-  Create(Create: Productos): Productos[] {
-    Data_Productos.push({ ...Create, id: crypto.randomUUID().toString() });
-    return Data_Productos;
+  // podemos actulizar las filas de manera rapida 
+  async update(id: number, updateProductoDto: UpdateProductoDto) {
+    return await this.ProductosRepository.update(id, updateProductoDto);
+  }
+
+  async remove(id: number) {
+    return await this.ProductosRepository.delete(id);
   }
 }
