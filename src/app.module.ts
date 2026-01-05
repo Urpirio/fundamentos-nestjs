@@ -4,16 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { ServiciosModule } from './servicios/servicios.module';
-import { env } from 'env/env';
+import { HomeHeroModule } from './home-hero/home-hero.module';
+import { AuthModule } from './auth/auth.module';
 
-//  type: 'mysql',
-//       host: env.MYSQLHOST,
-//       port: parseInt(`${env.MYSQLPORT}`),
-//       username: env.MYSQLUSER,
-//       password: env.MYSQLPASSWORD,
-//       database: env.MYSQLDATABASE,
-//       autoLoadEntities: true,
-//       synchronize: true,
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -29,6 +22,8 @@ import { env } from 'env/env';
     ProductosModule,
     UsersModule,
     ServiciosModule,
+    HomeHeroModule,
+    AuthModule,
   ],
 })
 export class AppModule {
